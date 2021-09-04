@@ -47,6 +47,11 @@ function filterByQuery(query, animalsArray) {
   }
   return filteredResults;
 }
+//Function to find items by a specific ID
+function findById(id, animalsArray) {
+  const result = animalsArray.filter((animal) => animal.id === id)[0];
+  return result;
+}
 
 //adding the route to the file animals and run a query
 app.get("/api/animals", (req, res) => {
@@ -55,6 +60,15 @@ app.get("/api/animals", (req, res) => {
     results = filterByQuery(req.query, results);
   }
   res.json(results);
+});
+//New get route utilizing a specific identifier such as an ID
+app.get("/api/animals/:id", (req, res) => {
+  const result = findById(req.params.id, animals);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send("Could not process request!");
+  }
 });
 
 //running the application on local host at port 3001
