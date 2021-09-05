@@ -1,6 +1,11 @@
 const express = require("express");
 const PORT = process.env.PORT || 3001;
 const app = express();
+// parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+// parse incoming JSON data
+app.use(express.json());
+
 const { animals } = require("./data/animal.json");
 
 //function to filter items by query
@@ -52,7 +57,11 @@ function findById(id, animalsArray) {
   const result = animalsArray.filter((animal) => animal.id === id)[0];
   return result;
 }
-
+//Function to take item from (req || request.body) and post an item to animal.js
+function createNewAnimal(body, animalsArray) {
+  console.log(body);
+  return body;
+}
 //adding the route to the file animals and run a query
 app.get("/api/animals", (req, res) => {
   let results = animals;
@@ -69,6 +78,16 @@ app.get("/api/animals/:id", (req, res) => {
   } else {
     res.send("Could not process request!");
   }
+});
+
+//This section will focus on creasing a post request of the data acquired
+//Adding a post method
+app.post("/api/animals", (req, res) => {
+  // req.body is where our incoming content will be
+  console.log(req.body);
+  // set id based on what the next index of the array will be
+  req.body.id = animals.length.toString();
+  res.json(req.body);
 });
 
 //running the application on local host at port 3001
